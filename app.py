@@ -41,6 +41,10 @@ except Exception as e:
 # -----------------------------------------------------------
 # FASTAPI INITIALIZATION
 # -----------------------------------------------------------
+headers = {"x-api-key": API_KEY}
+
+response = requests.post(API_URL, json=data, headers=headers)
+
 app = FastAPI(title="SmartPay Backend API", version="2.0")
 
 app.add_middleware(
@@ -173,4 +177,5 @@ def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+
 
