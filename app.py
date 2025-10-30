@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field, validator
 MODEL_PATH = os.getenv("MODEL_PATH", "salary_model_lgb.pkl")
 ENCODER_PATH = os.getenv("ENCODER_PATH", "encoders_lgb.pkl")
 DATA_PATH = os.getenv("DATA_PATH", "clean_salary_dataset.csv")
-API_KEY = os.getenv("API_KEY", "change_me")
+API_KEY = os.getenv("API_KEY", "NGROK_AUTH_TOKEN")
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*")
 
 # -----------------------------------------------------------
@@ -173,3 +173,4 @@ def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+
