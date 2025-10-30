@@ -17,6 +17,7 @@ import os
 # CONFIG
 # ----------------------------
 API_URL = "https://ai-powered-salary-prediction-system.onrender.com/"  # Replace this later
+API_KEY = "34nCrCfhGjOZbtZAezzgHnxD7Gb_zVyk1x3HzisCKzQHcV5h"   # same as backend
 MODEL_PATH = "salary_model_lgb.pkl"
 st.set_page_config(page_title="SmartPay | AI Salary Intelligence", page_icon="💼", layout="wide")
 
@@ -227,4 +228,5 @@ Developed by <b>Yuvaraja P</b> | Final Year CSE (IoT), Paavai Engineering Colleg
 <span style="color:#0072ff;">Powered by FastAPI · LightGBM · Streamlit</span>
 </footer>
 """, unsafe_allow_html=True)
+
 
