@@ -1,7 +1,9 @@
-fastapi
-uvicorn
+streamlit
+plotly
 pandas
 numpy
 lightgbm
 joblib
-python-multipart
+requests
+fpdf
+shap
