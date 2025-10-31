@@ -124,41 +124,54 @@ with tab1:
 
     st.write("")
     if st.button("🔍 Predict Salary", use_container_width=True):
-        payload = {
-            "age": int(age),
-            "education": str(education),
-            "job_title": str(job_title),
-            "hours_per_week": int(hours_per_week),
-            "gender": str(gender),
-            "marital_status": str(marital_status)
+     # Define backend URL and headers
+BACKEND_URL = "https://ai-powered-salary-prediction-system.onrender.com/predict"
+API_KEY = "34nCrCfhGjOZbtZAezzgHnxD7Gb_zVyk1x3HzisCKzQHcV5h"
+HEADERS = {"x-api-key": API_KEY, "Content-Type": "application/json"}
+
+# Send data to FastAPI backend
+response = requests.post(BACKEND_URL, json=data, headers=HEADERS)
+
+if response.status_code == 200:
+    result = response.json()
+    salary = float(result.get("predicted_salary_usd", 0))
+    kpis = {"Prediction Confidence": "High", "Model Version": "LightGBM v1.0"}
+
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=salary,
+        title={'text': "Predicted Annual Salary (USD)", 'font': {'size': 20, 'color': "#00c6ff"}},
+        gauge={
+            'axis': {'range': [0, 250000]},
+            'bar': {'color': "#00c6ff"},
+            'steps': [
+                {'range': [0, 50000], 'color': '#1e1e1e'},
+                {'range': [50000, 120000], 'color': '#24292f'},
+                {'range': [120000, 250000], 'color': '#30363d'}
+            ]
         }
-        with st.spinner("Contacting backend..."):
-            time.sleep(0.8)
-            try:
-                resp = requests.post(API_URL_PREDICT, json=payload, headers=HEADERS, timeout=20)
-                if resp.status_code == 200:
-                    res = resp.json()
-                    salary = float(res.get("predicted_salary_usd", 0.0))
-                    st.success(f"Predicted Salary: ${salary:,.2f} USD")
+    ))
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+    st.plotly_chart(fig, use_container_width=True)
+    st.markdown(f"<h3 style='text-align:center; color:#00c6ff;'>Predicted Salary: ${salary:,.2f}</h3>", unsafe_allow_html=True)
 
-                    fig = go.Figure(go.Indicator(
-                        mode="gauge+number",
-                        value=salary,
-                        title={'text': "Predicted Annual Salary (USD)"},
-                        gauge={'axis': {'range': [0, max(200000, salary*1.2)]}, 'bar': {'color': "#00c6ff"}}
-                    ))
-                    st.plotly_chart(fig, use_container_width=True)
+    pdf_path = generate_pdf_report(data, salary, kpis)
+    with open(pdf_path, "rb") as pdf_file:
+        st.download_button(
+            label="📄 Download Report (PDF)",
+            data=pdf_file,
+            file_name="SmartPay_Report.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+    st.markdown("</div>", unsafe_allow_html=True)
 
-                    pdf_path = generate_pdf_report(payload, salary, {"Model": "LightGBM"})
-                    with open(pdf_path, "rb") as f:
-                        st.download_button("📄 Download Report (PDF)", data=f, file_name="SmartPay_Report.pdf", mime="application/pdf")
-                elif resp.status_code in (401, 403):
-                    st.error("Authentication error (401/403). Check API key or backend config.")
-                else:
-                    st.error(f"API Error: {resp.status_code} - {resp.text}")
-            except requests.exceptions.RequestException as e:
-                st.error(f"Connection error: {e}")
+elif response.status_code in [401, 403]:
+    st.error("🔒 Authentication Error: Check your API key or backend security settings.")
+else:
+    st.error(f"⚠️ API Error {response.status_code}: {response.text}")
 
+   
 # ----------------------------
 # TAB 2: Analysis
 # ----------------------------
@@ -232,4 +245,5 @@ with tab3:
 # FOOTER
 # ----------------------------
 st.markdown("""<hr><div style='text-align:center;color:#8b949e;'>Developed by <b>Yuvaraja P</b> | Final Year CSE (IoT), Paavai Engineering College — Powered by FastAPI · LightGBM · Streamlit</div>""", unsafe_allow_html=True)
+
 
