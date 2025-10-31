@@ -21,9 +21,11 @@ API_URL_ANALYZE = f"{BACKEND_BASE}/analyze"
 API_URL_EXPLAIN = f"{BACKEND_BASE}/explain"
 
 # WARNING: for production, put this in Streamlit secrets or env vars.
+BACKEND_URL = "https://ai-powered-salary-prediction-system.onrender.com/predict"
 API_KEY = "34nCrCfhGjOZbtZAezzgHnxD7Gb_zVyk1x3HzisCKzQHcV5h"
-
 HEADERS = {"x-api-key": API_KEY, "Content-Type": "application/json"}
+
+response = requests.post(BACKEND_URL, json=data, headers=HEADERS)
 
 st.set_page_config(page_title="SmartPay | AI Salary Intelligence", page_icon="💼", layout="wide")
 
@@ -230,3 +232,4 @@ with tab3:
 # FOOTER
 # ----------------------------
 st.markdown("""<hr><div style='text-align:center;color:#8b949e;'>Developed by <b>Yuvaraja P</b> | Final Year CSE (IoT), Paavai Engineering College — Powered by FastAPI · LightGBM · Streamlit</div>""", unsafe_allow_html=True)
+
